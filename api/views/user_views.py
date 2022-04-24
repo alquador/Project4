@@ -8,6 +8,7 @@ from django.contrib.auth import get_user, authenticate, login, logout
 from ..serializers import UserSerializer, UserRegisterSerializer,  ChangePasswordSerializer
 from ..models.user import User
 
+
 class SignUp(generics.CreateAPIView):
     # Override the authentication/permissions classes so this endpoint
     # is not authenticated & we don't need any permissions to access it.
@@ -18,9 +19,12 @@ class SignUp(generics.CreateAPIView):
     serializer_class = UserRegisterSerializer
 
     def post(self, request):
+        print(request.data)
         # Pass the request data to the serializer to validate it
-        user = UserRegisterSerializer(data=request.data['credentials'])
+        user = UserRegisterSerializer(data=request.data.get(['credentials']))
         # If that data is in the correct format...
+        print('user', user)
+        print('request.data', request.data['credentials'])
         if user.is_valid():
             # Actually create the user using the UserSerializer (the `create` method defined there)
             created_user = UserSerializer(data=user.data)

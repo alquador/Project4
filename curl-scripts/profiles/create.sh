@@ -1,6 +1,6 @@
 #!/bin/bash
 
-curl "http://localhost:8000/mangos/" \
+curl "http://localhost:8000/profiles/" \
   --include \
   --request POST \
   --header "Content-Type: application/json" \
@@ -8,8 +8,8 @@ curl "http://localhost:8000/mangos/" \
   --data '{
     "mango": {
       "name": "'"${NAME}"'",
-      "color": "'"${COLOR}"'",
-      "ripe": "'"${RIPE}"'"
+      "age": "'"${AGE}"'",
+      "about_me": "'"${ABOUT_ME}"'"
     }
   }'
 
