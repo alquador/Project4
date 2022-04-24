@@ -5,7 +5,7 @@ from rest_framework import generics, status
 from django.shortcuts import get_object_or_404
 
 
-from ..models.invite import Invite
+from ..models.profile import Profile
 from ..serializers import ProfileSerializer
 
 # Create your views here.
