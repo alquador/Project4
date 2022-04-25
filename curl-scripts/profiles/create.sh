@@ -6,7 +6,7 @@ curl "http://localhost:8000/profiles/" \
   --header "Content-Type: application/json" \
   --header "Authorization: Token ${TOKEN}" \
   --data '{
-    "mango": {
+    "profile": {
       "name": "'"${NAME}"'",
       "age": "'"${AGE}"'",
       "about_me": "'"${ABOUT_ME}"'"
