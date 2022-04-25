@@ -11,7 +11,7 @@ class Profile(models.Model):
   age = models.IntegerField()
   about_me = models.CharField(max_length=1000)
   # For user ownership, we'll add a new field 'owner' which keeps track
-  # of the user id who owns this the mango
+  # of the user id who owns this the profile
   user_id = models.ForeignKey(
       get_user_model(),
       on_delete=models.CASCADE
@@ -22,7 +22,7 @@ class Profile(models.Model):
     return f"The profile named '{self.name}' is {self.age} years old. About them: {self.about_me} ."
 
   def as_dict(self):
-    """Returns dictionary version of Mango models"""
+    """Returns dictionary version of Profile models"""
     return {
         'id': self.id,
         'name': self.name,
