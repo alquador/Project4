@@ -5,7 +5,7 @@ from rest_framework import generics, status
 from django.shortcuts import get_object_or_404
 
 
-from ..models.invite import Invite
+from ..models.invite import Invite as InviteModel
 from ..serializers import InviteSerializer
 
 # Create your views here.
@@ -18,7 +18,7 @@ class Invite(generics.ListCreateAPIView):
         # 1. query for all the invites --> here we use .all()
         # Filter the invites by owner, so you can only see your owned invites
         # the host is the owner of the invite
-        invites = Invite.objects.filter(host_id=request.user.id, friend_id=request.user.id)
+        invites = InviteModel.objects.filter(host_id=request.user.id, friend_id=request.user.id)
         # Run the data through the serializer
         # 2. Serializer --> formats the data we just found
         data = InviteSerializer(invites, many=True).data
@@ -43,7 +43,7 @@ class InviteDetail(generics.RetrieveUpdateDestroyAPIView):
     def get(self, request, pk):
         """Show request"""
         # Locate the invite to show
-        invite = get_object_or_404(Invite, pk=pk)
+        invite = get_object_or_404(InviteModel, pk=pk)
         # Only want to show owned and received invites?
         if request.user != invite.host_id:
             raise PermissionDenied('Unauthorized, you do not own this invite')
@@ -55,7 +55,7 @@ class InviteDetail(generics.RetrieveUpdateDestroyAPIView):
     def delete(self, request, pk):
         """Delete request"""
         # Locate invite to delete
-        invite = get_object_or_404(Invite, pk=pk)
+        invite = get_object_or_404(InviteModel, pk=pk)
         # Check the invite's owner against the user making this request
         if request.user != invite.host_id:
             raise PermissionDenied('Unauthorized, you do not own this invite')
@@ -67,7 +67,7 @@ class InviteDetail(generics.RetrieveUpdateDestroyAPIView):
         """Update Request"""
         # Locate Invite
         # get_object_or_404 returns a object representation of our Invite
-        invite = get_object_or_404(Invite, pk=pk)
+        invite = get_object_or_404(InviteModel, pk=pk)
         # Check the invite's owner against the user making this request
         if request.user != invite.host_id:
             raise PermissionDenied('Unauthorized, you do not own this invite')

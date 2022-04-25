@@ -4,8 +4,8 @@ from rest_framework.exceptions import PermissionDenied
 from rest_framework import generics, status
 from django.shortcuts import get_object_or_404
 
-
-from ..models.profile import Profile
+from ..models.user import User
+from ..models.profile import Profile as ProfileModel
 from ..serializers import ProfileSerializer
 
 # Create your views here.
@@ -18,7 +18,7 @@ class Profile(generics.ListCreateAPIView):
         # 1. query for all the profiles --> here we use .all()
         # profiles = Profile.objects.all()
         # Filter the profiles by owner, so you can only see your owned profiles
-        profiles = Profile.objects.filter(user_id=request.user.id)
+        profiles = ProfileModel.objects.filter(user_id=request.user.id)
         # Run the data through the serializer
         # 2. Serializer --> formats the data we just found
         data = ProfileSerializer(profiles, many=True).data
@@ -43,10 +43,11 @@ class ProfileDetail(generics.RetrieveUpdateDestroyAPIView):
     def get(self, request, pk):
         """Show request"""
         # Locate the profile to show
-        profile = get_object_or_404(Profile, pk=pk)
+        profile = get_object_or_404(ProfileModel, pk=pk)
         # Only want to show owned profiles?
-        if request.user != profile.user:
-            raise PermissionDenied('Unauthorized, you do not own this profile!')
+        # I want the profiles to be viewable to all so the invite can be made
+        # if request.user != profile.user:
+        #     raise PermissionDenied('Unauthorized, you do not own this profile!')
 
         # Run the data through the serializer so it's formatted
         data = ProfileSerializer(profile).data
@@ -55,7 +56,7 @@ class ProfileDetail(generics.RetrieveUpdateDestroyAPIView):
     def delete(self, request, pk):
         """Delete request"""
         # Locate profile to delete
-        profile = get_object_or_404(Profile, pk=pk)
+        profile = get_object_or_404(ProfileModel, pk=pk)
         # Check the profile's owner against the user making this request
         if request.user != profile.user_id:
             raise PermissionDenied('Unauthorized, you do not own this profile!')
@@ -67,7 +68,7 @@ class ProfileDetail(generics.RetrieveUpdateDestroyAPIView):
         """Update Request"""
         # Locate Profile
         # get_object_or_404 returns a object representation of our Profile
-        profile = get_object_or_404(Profile, pk=pk)
+        profile = get_object_or_404(ProfileModel, pk=pk)
         # Check the profile's owner against the user making this request
         if request.user != profile.user_id:
             raise PermissionDenied('Unauthorized, you do not own this profile!')
