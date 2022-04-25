@@ -10,5 +10,5 @@
 
 ### Tech Stack:
 - Django
-- Postgres
+- SQL (PostgresSQL)
 - Python
