@@ -16,9 +16,9 @@ class Profile(generics.ListCreateAPIView):
         """Index request"""
         # Get all the profiles:
         # 1. query for all the profiles --> here we use .all()
-        # profiles = Profile.objects.all()
+        profiles = ProfileModel.objects.all()
         # Filter the profiles by owner, so you can only see your owned profiles
-        profiles = ProfileModel.objects.filter(user_id=request.user.id)
+        # profiles = ProfileModel.objects.filter(user_id=request.user.id)
         # Run the data through the serializer
         # 2. Serializer --> formats the data we just found
         data = ProfileSerializer(profiles, many=True).data
