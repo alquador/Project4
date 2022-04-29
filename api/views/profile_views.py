@@ -13,7 +13,7 @@ class Profile(generics.ListCreateAPIView):
     permission_classes=(IsAuthenticated,)
     serializer_class = ProfileSerializer
     def get(self, request):
-        """Index request"""
+        """Index request of all Profiles"""
         # Get all the profiles:
         # 1. query for all the profiles --> here we use .all()
         profiles = ProfileModel.objects.all()
@@ -23,6 +23,18 @@ class Profile(generics.ListCreateAPIView):
         # 2. Serializer --> formats the data we just found
         data = ProfileSerializer(profiles, many=True).data
         return Response({ 'profiles': data })
+
+    # def get(self, request):
+    #     """Index request of all Profiles owned by the user"""
+    #     # Get all the profiles:
+    #     # 1. query for all the profiles --> here we use .all()
+    #     # profiles = ProfileModel.objects.all()
+    #     # Filter the profiles by owner, so you can only see your owned profiles
+    #     profiles = ProfileModel.objects.filter(user_id=request.user.id)
+    #     # Run the data through the serializer
+    #     # 2. Serializer --> formats the data we just found
+    #     data = ProfileSerializer(profiles, many=True).data
+    #     return Response({ 'profiles': data })
 
     def post(self, request):
         """Create request"""
@@ -48,7 +60,6 @@ class ProfileDetail(generics.RetrieveUpdateDestroyAPIView):
         # I want the profiles to be viewable to all so the invite can be made
         # if request.user != profile.user:
         #     raise PermissionDenied('Unauthorized, you do not own this profile!')
-
         # Run the data through the serializer so it's formatted
         data = ProfileSerializer(profile).data
         return Response({ 'profile': data })

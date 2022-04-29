@@ -6,7 +6,7 @@ from django.shortcuts import get_object_or_404
 
 
 from ..models.invite import Invite as InviteModel
-from ..serializers import InviteSerializer
+from ..serializers import InviteSerializer, UserSerializer
 
 # Create your views here.
 class Invite(generics.ListCreateAPIView):
@@ -45,12 +45,18 @@ class InviteDetail(generics.RetrieveUpdateDestroyAPIView):
         """Show request"""
         # Locate the invite to show
         invite = get_object_or_404(InviteModel, pk=pk)
-        # Only want to show owned and received invites?
+        # access profile_name through the foreign key
+        # invite_with_user_info = Invite.objects.select_related('host_id', 'friend_id').get(id=pk)
+        # user = UserSerializer(invite_with_user_info.user_id.as_dict()).data
+        # Only want to show owned and received invites
         if request.user != invite.host_id and request.user != invite.friend_id:
             raise PermissionDenied('Unauthorized, you do not own this invite')
-
         # Run the data through the serializer so it's formatted
         data = InviteSerializer(invite).data
+        # allData = {
+        #     "invite": data,
+        #     "user": data
+        # }
         return Response({ 'invite': data })
 
     def delete(self, request, pk):
@@ -70,7 +76,7 @@ class InviteDetail(generics.RetrieveUpdateDestroyAPIView):
         # get_object_or_404 returns a object representation of our Invite
         invite = get_object_or_404(InviteModel, pk=pk)
         # Check the invite's owner against the user making this request
-        if request.user != invite.host_id:
+        if request.user != invite.host_id and request.user != invite.friend_id:
             raise PermissionDenied('Unauthorized, you do not own this invite')
 
         # Ensure the owner field is set to the current user's ID
