@@ -46,7 +46,7 @@ class InviteDetail(generics.RetrieveUpdateDestroyAPIView):
         # Locate the invite to show
         invite = get_object_or_404(InviteModel, pk=pk)
         # Only want to show owned and received invites?
-        if request.user != invite.host_id:
+        if request.user != invite.host_id and request.user != invite.friend_id:
             raise PermissionDenied('Unauthorized, you do not own this invite')
 
         # Run the data through the serializer so it's formatted
