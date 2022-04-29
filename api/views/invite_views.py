@@ -45,6 +45,7 @@ class InviteDetail(generics.RetrieveUpdateDestroyAPIView):
         """Show request"""
         # Locate the invite to show
         invite = get_object_or_404(InviteModel, pk=pk)
+        ####query profile by host and id
         # access profile_name through the foreign key
         # invite_with_user_info = Invite.objects.select_related('host_id', 'friend_id').get(id=pk)
         # user = UserSerializer(invite_with_user_info.user_id.as_dict()).data
@@ -57,6 +58,7 @@ class InviteDetail(generics.RetrieveUpdateDestroyAPIView):
         #     "invite": data,
         #     "user": data
         # }
+        #### add profile to repsonse json
         return Response({ 'invite': data })
 
     def delete(self, request, pk):
@@ -80,7 +82,7 @@ class InviteDetail(generics.RetrieveUpdateDestroyAPIView):
             raise PermissionDenied('Unauthorized, you do not own this invite')
 
         # Ensure the owner field is set to the current user's ID
-        request.data['invite']['host_id'] = request.user.id
+        request.data['invite']['host_id']['friend_id'] = request.user.id
         # Validate updates with serializer
         data = InviteSerializer(invite, data=request.data['invite'], partial=True)
         if data.is_valid():
@@ -88,4 +90,26 @@ class InviteDetail(generics.RetrieveUpdateDestroyAPIView):
             data.save()
             return Response(status=status.HTTP_204_NO_CONTENT)
         # If the data is not valid, return a response with the errors
+        return Response(data.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class InviteAccept(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes=(IsAuthenticated,)
+    def partial_update(self, request, pk):
+        """Update Request"""
+        # Locate Invite
+        # get_object_or_404 returns a object representation of our Invite
+        invite = get_object_or_404(InviteModel, pk=pk)
+        # Check the invite's owner against the user making this request
+        if request.user != invite.host_id or request.user != invite.friend_id:
+            raise PermissionDenied('Unauthorized, you do not own this invite')
+
+        # Ensure the owner field is set to the current user's ID
+        request.data['invite']['host_id']['friend_id'] = request.user.id
+        # Validate updates with serializer
+        data = InviteSerializer(invite, data=request.data['invite'], partial=True)
+        if data.is_valid():
+            # Save & send a 204 no content
+            data.save()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+            # If the data is not valid, return a response with the errors
         return Response(data.errors, status=status.HTTP_400_BAD_REQUEST)
