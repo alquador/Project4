@@ -24,18 +24,6 @@ class Profile(generics.ListCreateAPIView):
         data = ProfileSerializer(profiles, many=True).data
         return Response({ 'profiles': data })
 
-    # def get(self, request):
-    #     """Index request of all Profiles owned by the user"""
-    #     # Get all the profiles:
-    #     # 1. query for all the profiles --> here we use .all()
-    #     # profiles = ProfileModel.objects.all()
-    #     # Filter the profiles by owner, so you can only see your owned profiles
-    #     profiles = ProfileModel.objects.filter(user_id=request.user.id)
-    #     # Run the data through the serializer
-    #     # 2. Serializer --> formats the data we just found
-    #     data = ProfileSerializer(profiles, many=True).data
-    #     return Response({ 'profiles': data })
-
     def post(self, request):
         """Create request"""
         # Add user to request data object
@@ -94,3 +82,18 @@ class ProfileDetail(generics.RetrieveUpdateDestroyAPIView):
             return Response(status=status.HTTP_204_NO_CONTENT)
         # If the data is not valid, return a response with the errors
         return Response(data.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class MyProfile(generics.ListCreateAPIView):
+    permission_classes=(IsAuthenticated,)
+    serializer_class = ProfileSerializer
+    def get(self, request):
+        """Index request of all Profiles owned by the user"""
+        # Get all the profiles:
+        # 1. query for all the profiles --> here we use .all()
+        # profiles = ProfileModel.objects.all()
+        # Filter the profiles by owner, so you can only see your owned profiles
+        profiles = ProfileModel.objects.filter(user_id=request.user.id)
+        # Run the data through the serializer
+        # 2. Serializer --> formats the data we just found
+        data = ProfileSerializer(profiles, many=True).data
+        return Response({ 'profiles': data })

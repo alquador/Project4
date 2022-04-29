@@ -64,7 +64,7 @@ class InviteDetail(generics.RetrieveUpdateDestroyAPIView):
         # Locate invite to delete
         invite = get_object_or_404(InviteModel, pk=pk)
         # Check the invite's owner against the user making this request
-        if request.user != invite.host_id:
+        if request.user != invite.host_id and request.user != invite.friend_id:
             raise PermissionDenied('Unauthorized, you do not own this invite')
         # Only delete if the user owns the invite
         invite.delete()
@@ -76,7 +76,7 @@ class InviteDetail(generics.RetrieveUpdateDestroyAPIView):
         # get_object_or_404 returns a object representation of our Invite
         invite = get_object_or_404(InviteModel, pk=pk)
         # Check the invite's owner against the user making this request
-        if request.user != invite.host_id and request.user != invite.friend_id:
+        if request.user != invite.host_id or request.user != invite.friend_id:
             raise PermissionDenied('Unauthorized, you do not own this invite')
 
         # Ensure the owner field is set to the current user's ID
