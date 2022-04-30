@@ -82,7 +82,7 @@ class InviteDetail(generics.RetrieveUpdateDestroyAPIView):
             raise PermissionDenied('Unauthorized, you do not own this invite')
 
         # Ensure the owner field is set to the current user's ID
-        request.data['invite']['host_id']['friend_id'] = request.user.id
+        request.data['invite']['host_id'] = request.user.id
         # Validate updates with serializer
         data = InviteSerializer(invite, data=request.data['invite'], partial=True)
         if data.is_valid():
