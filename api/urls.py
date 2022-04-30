@@ -1,5 +1,5 @@
 from django.urls import path
-from .views.invite_views import Invite, InviteDetail, InviteAccept
+from .views.invite_views import Invite, InviteDetail, InviteAccept, InviteAcceptDetail
 from .views.profile_views import Profile, ProfileDetail, MyProfile
 from .views.user_views import SignUp, SignIn, SignOut, ChangePassword
 
@@ -10,6 +10,7 @@ urlpatterns = [
     path('invites/create/', Invite.as_view(), name='invites_create'),
     path('invites/<int:pk>/update/', InviteDetail.as_view(), name='invites_update'),
     path('invites/accepted/', InviteAccept.as_view(), name='invites_accept'),
+    path('invites/accepted/<int:pk>/', InviteAcceptDetail.as_view(), name='invites_accept_detail'),
     path('invites/<int:pk>/delete/', InviteDetail.as_view(), name='invites_delete'),
     path('profiles/', Profile.as_view(), name='profiles'),
     path('profiles/mine/', MyProfile.as_view(), name='profiles_mine'), 
