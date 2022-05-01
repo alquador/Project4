@@ -3,9 +3,9 @@ from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseU
 from django.conf import settings
 from rest_framework.authtoken.models import Token
 
+
 class UserManager(BaseUserManager):
     """Manager for user profiles"""
-
     # The create_user method is passed:
     # self:      All methods in Python receive the class as the first argument
     # email:     Because we want to be able to log users in with email

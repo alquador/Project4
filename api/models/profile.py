@@ -14,7 +14,8 @@ class Profile(models.Model):
   # of the user id who owns this the profile
   user_id = models.ForeignKey(
       get_user_model(),
-      on_delete=models.CASCADE
+      on_delete=models.CASCADE,
+      related_name='user_profiles'
   )
 
   def __str__(self):
