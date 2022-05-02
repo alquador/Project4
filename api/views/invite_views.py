@@ -126,7 +126,7 @@ class InviteAcceptDetail(generics.RetrieveUpdateDestroyAPIView):
         # invite_with_user_info = Invite.objects.select_related('host_id', 'friend_id').get(id=pk)
         # user = UserSerializer(invite_with_user_info.user_id.as_dict()).data
         # Only want to show owned and received invites
-        if request.user != invite.host_id and request.user != invite.friend_id:
+        if request.user != invite.host_id or request.user != invite.friend_id:
             raise PermissionDenied('Unauthorized, you do not own this invite')
         # Run the data through the serializer so it's formatted
         data = InviteSerializer(invite).data
