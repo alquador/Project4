@@ -1,3 +1,5 @@
+
+   
 from django.db import models
 # we're going to be using a special method to find our user model
 from django.contrib.auth import get_user_model
@@ -15,7 +17,6 @@ class Profile(models.Model):
   user_id = models.ForeignKey(
       get_user_model(),
       on_delete=models.CASCADE,
-      related_name='user_profiles'
   )
 
   def __str__(self):
@@ -29,5 +30,5 @@ class Profile(models.Model):
         'name': self.name,
         'age': self.age,
         'about_me': self.about_me,
-        'user': self.user_id
+        'user': self.user
     }

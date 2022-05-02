@@ -6,22 +6,19 @@ from .models.profile import Profile
 from .models.user import User
 
 class InviteSerializer(serializers.ModelSerializer):
-    user_host_id = serializers.StringRelatedField()
-    user_friend_id = serializers.StringRelatedField()
     class Meta:
         model = Invite
-        fields = '__all__'
+        fields = ('id', 'title', 'date', 'time', 'location', 'details', 'accepted', 'host_id', 'friend_id')
 
 class ProfileSerializer(serializers.ModelSerializer):
-    user_id = serializers.StringRelatedField()
     class Meta:
         model = Profile
-        fields = '__all__'
+        fields = ('id', 'name', 'age', 'about_me', 'user_id')
 
 class UserSerializer(serializers.ModelSerializer):
     # this utilizes the custom related_name set on the model Profile
     # by running through the serializer, we have access to all the fields
-    user_profiles = ProfileSerializer(many=True, read_only=True)
+    # user_profiles = ProfileSerializer(many=True, read_only=True)
     # This model serializer will be used for User creation
     # The login serializer also inherits from this serializer
     # in order to require certain data for login
@@ -29,7 +26,7 @@ class UserSerializer(serializers.ModelSerializer):
         # get_user_model will get the user model (this is required)
         # https://docs.djangoproject.com/en/3.0/topics/auth/customizing/#referencing-the-user-model
         model = get_user_model()
-        fields = '__all__'
+        fields = ('id', 'email', 'password')
         extra_kwargs = { 'password': { 'write_only': True, 'min_length': 5 } }
 
     # This create method will be used for model creation
